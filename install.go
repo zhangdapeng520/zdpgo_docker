@@ -39,27 +39,42 @@ func InstallOnCentos8(host, username, password string, port ...int) (result stri
 	ssh.UploadFile(localFilePath, remoteDirPath)
 
 	// 第二步：执行安装脚本
-	command = fmt.Sprintf("cd %s; chmod +x install_docker.sh; echo %s | sudo -S ./install_docker.sh", remoteDirPath, password)
+	command = "chmod +x install_docker.sh"
+	fmt.Println("正在执行命令：", command)
 	result_, err = ssh.Run(command)
 	if err != nil {
 		return "", err
 	}
+	fmt.Println("命令执行结果：", result_)
+	result += result_
+
+	command = "./install_docker.sh"
+	fmt.Println("正在执行命令：", command)
+	result_, err = ssh.Sudo(command)
+	if err != nil {
+		return "", err
+	}
+	fmt.Println("命令执行结果：", result_)
 	result += result_
 
 	// 第三步：删除安装脚本
 	command = fmt.Sprintf("cd %s; rm -rf install_docker.sh", remoteDirPath)
+	fmt.Println("正在执行命令：", command)
 	result_, err = ssh.Run(command)
 	if err != nil {
 		return "", err
 	}
+	fmt.Println("命令执行结果：", result_)
 	result += result_
 
 	// 第四步： 验证是否安装成功
 	command = "docker ps -a"
-	result_, err = ssh.Run(command)
+	fmt.Println("正在执行命令：", command)
+	result_, err = ssh.Sudo(command)
 	if err != nil {
 		return "", err
 	}
+	fmt.Println("命令执行结果：", result_)
 	result += result_
 
 	return result, err

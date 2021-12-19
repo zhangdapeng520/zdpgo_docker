@@ -13,6 +13,6 @@ func main() {
 	// ssh.UploadFile("../../install.go", "/home/zhangdapeng")
 	// fmt.Println("文件上传成功。")
 
-	result, err := zdpgo_docker.InstallOnCentos8("192.168.18.13", "zhangdapeng", "zhangdapeng", 22)
+	result, err := zdpgo_docker.InstallOnCentos8("192.168.18.101", "zhangdapeng", "zhangdapeng", 22)
 	fmt.Println(result, err)
 }
