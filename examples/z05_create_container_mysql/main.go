@@ -17,10 +17,10 @@ func main() {
 	
 	// 创建容器
 	// @param name：容器名称
-	// @param version：PostgreSQL镜像版本号
-	// @param password：PostgreSQL登录密码
+	// @param version：Mysql镜像版本号
+	// @param password：Mysql登录密码
 	// @param port：容器端口号
-	result, err := docker.CreateContainerPostgres("postgres12", "12", "postgres", 5432)
+	result, err := docker.CreateContainerMysql("mysql57", "5.7", "root", 3306)
 	if err != nil{
 		fmt.Println(err)
 		return
