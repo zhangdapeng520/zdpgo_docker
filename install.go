@@ -19,8 +19,20 @@ func init() {
 	}
 }
 
+// 在centos7上安装docker
+// @param host: 主机地址
+// @param username: 用户名
+// @param password: 密码
+// @param port: 端口号，默认是200
+func InstallOnCentos7(host, username, password string, port ...int) (result string, err error) {
+	return InstallOnCentos8(host,username,password,port...)
+}
+
 // 在centos8上安装docker
-// "192.168.18.11", "zhangdapeng", "zhangdapeng", 22
+// @param host: 主机地址
+// @param username: 用户名
+// @param password: 密码
+// @param port: 端口号，默认是200
 func InstallOnCentos8(host, username, password string, port ...int) (result string, err error) {
 	var (
 		port_   int = 22
