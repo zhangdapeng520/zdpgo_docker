@@ -15,7 +15,9 @@ type Docker struct {
 
 // 连接Docker
 func (d *Docker)Connect(){
-	ssh := zdpgo_ssh.New(d.Host, d.Username, d.Password, d.Port)
-	ssh.Connect()
-	d.SSH = ssh
+	if d.SSH == nil{
+		ssh := zdpgo_ssh.New(d.Host, d.Username, d.Password, d.Port)
+		ssh.Connect()
+		d.SSH = ssh
+	}
 }
