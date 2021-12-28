@@ -8,5 +8,5 @@ import (
 
 func main() {
 	result, err := zdpgo_docker.InstallOnCentos7("192.168.18.101", "zhangdapeng", "zhangdapeng", 22)
-	fmt.Println(result, err)
+	d.log.Info(result, err)
 }

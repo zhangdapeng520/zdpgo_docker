@@ -3,19 +3,20 @@
 package main
 
 import (
-	"fmt"
+	`fmt`
 	
 	"github.com/zhangdapeng520/zdpgo_docker"
 )
 
 func main() {
 	// 创建对象
-	docker := zdpgo_docker.Docker{
+	config := zdpgo_docker.DockerConfig{
 		Host:     "192.168.18.101",
 		Port:     22,
 		Username: "zhangdapeng",
 		Password: "zhangdapeng",
 	}
+	docker := zdpgo_docker.New(config)
 	
 	// 创建zookeeper容器
 	result, err := docker.CreateContainerZookeeperDefault()
@@ -33,6 +34,7 @@ func main() {
 	}
 	fmt.Println(result)
 }
+
 ```
 
 ## 测试是否安装成功
@@ -69,12 +71,13 @@ import (
 
 func main() {
 	// 创建对象
-	docker := zdpgo_docker.Docker{
+	config := zdpgo_docker.DockerConfig{
 		Host:     "192.168.18.101",
 		Port:     22,
 		Username: "zhangdapeng",
 		Password: "zhangdapeng",
 	}
+	docker := zdpgo_docker.New(config)
 	
 	// 删除容器
 	result, err := docker.Remove("zookeeper")
@@ -91,4 +94,5 @@ func main() {
 	}
 	fmt.Println(result)
 }
+
 ```

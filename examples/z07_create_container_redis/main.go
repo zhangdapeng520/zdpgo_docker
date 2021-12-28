@@ -15,17 +15,8 @@ func main() {
 		Password: "zhangdapeng",
 	}
 	docker := zdpgo_docker.New(config)
-
-	// 创建zookeeper容器
-	result, err := docker.CreateContainerZookeeperDefault()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(result)
-
-	// 创建kafka容器
-	result, err = docker.CreateContainerKafka("kafka", "zookeeper", "192.168.18.101", 9092)
+	// 创建redis容器
+	result, err := docker.CreateContainerRedisDefault()
 	if err != nil {
 		fmt.Println(err)
 		return
