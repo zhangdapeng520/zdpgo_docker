@@ -7,20 +7,19 @@ import "fmt"
 // @param version：PostgreSQL镜像版本号
 // @param password：PostgreSQL登录密码
 // @param port：容器端口号
-func (d *Docker) CreateContainerPostgres(name, version string, password string, port int)(string, error){
+func (d *Docker) CreateContainerPostgres(name, version string, password string, port int) (string, error) {
 	var (
 		command string
-		result string
-		err error
+		result  string
+		err     error
 	)
 	d.Connect()
 
-	
 	// 创建映射目录
 	command = fmt.Sprintf("mkdir -p /data/docker/%s/data", name)
 	fmt.Println("正在执行命令：", command)
 	result, err = d.SSH.Sudo(command)
-	if err != nil{
+	if err != nil {
 		return "", err
 	}
 	fmt.Println("命令执行结果：", result)
@@ -32,7 +31,7 @@ func (d *Docker) CreateContainerPostgres(name, version string, password string, 
 
 	fmt.Println("正在执行命令：", command)
 	result, err = d.SSH.Sudo(command)
-	if err != nil{
+	if err != nil {
 		return "", err
 	}
 	fmt.Println("命令执行结果：", result)
@@ -41,7 +40,7 @@ func (d *Docker) CreateContainerPostgres(name, version string, password string, 
 	command = "docker ps -a"
 	fmt.Println("正在执行命令：", command)
 	result, err = d.SSH.Sudo(command)
-	if err != nil{
+	if err != nil {
 		return "", err
 	}
 	fmt.Println("命令执行结果：", result)
@@ -54,22 +53,21 @@ func (d *Docker) CreateContainerPostgres(name, version string, password string, 
 // @param version：Mysql镜像版本号
 // @param password：Mysql登录密码
 // @param port：容器端口号
-func (d *Docker) CreateContainerMysql(name, version string, password string, port int)(string, error){
+func (d *Docker) CreateContainerMysql(name, version string, password string, port int) (string, error) {
 	var (
 		command string
-		result string
-		err error
+		result  string
+		err     error
 	)
 	d.Connect()
 
-	
 	// 先临时创建目录
 	command = fmt.Sprintf("docker run -itd --restart=always --name %s -p %d:3306 -e MYSQL_ROOT_PASSWORD=%s mysql:%s",
 		name, port, password, version,
 	)
 	fmt.Println("正在执行命令：", command)
 	result, err = d.SSH.Sudo(command)
-	if err != nil{
+	if err != nil {
 		return "", err
 	}
 	fmt.Println("命令执行结果：", result)
@@ -78,7 +76,7 @@ func (d *Docker) CreateContainerMysql(name, version string, password string, por
 	command = fmt.Sprintf("mkdir -p /data/docker/%s/conf", name)
 	fmt.Println("正在执行命令：", command)
 	result, err = d.SSH.Sudo(command)
-	if err != nil{
+	if err != nil {
 		return "", err
 	}
 	fmt.Println("命令执行结果：", result)
@@ -86,7 +84,7 @@ func (d *Docker) CreateContainerMysql(name, version string, password string, por
 	command = fmt.Sprintf("mkdir -p /data/docker/%s/data", name)
 	fmt.Println("正在执行命令：", command)
 	result, err = d.SSH.Sudo(command)
-	if err != nil{
+	if err != nil {
 		return "", err
 	}
 	fmt.Println("命令执行结果：", result)
@@ -97,7 +95,7 @@ func (d *Docker) CreateContainerMysql(name, version string, password string, por
 	)
 	fmt.Println("正在执行命令：", command)
 	result, err = d.SSH.Sudo(command)
-	if err != nil{
+	if err != nil {
 		return "", err
 	}
 	fmt.Println("命令执行结果：", result)
@@ -106,16 +104,15 @@ func (d *Docker) CreateContainerMysql(name, version string, password string, por
 	command = "docker stop " + name
 	fmt.Println("正在执行命令：", command)
 	result, err = d.SSH.Sudo(command)
-	if err != nil{
+	if err != nil {
 		return "", err
 	}
 	fmt.Println("命令执行结果：", result)
 
-
 	command = "docker rm " + name
 	fmt.Println("正在执行命令：", command)
 	result, err = d.SSH.Sudo(command)
-	if err != nil{
+	if err != nil {
 		return "", err
 	}
 	fmt.Println("命令执行结果：", result)
@@ -126,7 +123,7 @@ func (d *Docker) CreateContainerMysql(name, version string, password string, por
 	)
 	fmt.Println("正在执行命令：", command)
 	result, err = d.SSH.Sudo(command)
-	if err != nil{
+	if err != nil {
 		return "", err
 	}
 	fmt.Println("命令执行结果：", result)
@@ -135,7 +132,96 @@ func (d *Docker) CreateContainerMysql(name, version string, password string, por
 	command = "docker ps -a"
 	fmt.Println("正在执行命令：", command)
 	result, err = d.SSH.Sudo(command)
-	if err != nil{
+	if err != nil {
+		return "", err
+	}
+	fmt.Println("命令执行结果：", result)
+
+	return result, err
+}
+
+// 创建Zookeeper容器，默认使用zookeeper最新版本
+// @param name：容器名称
+// @param port：容器端口号
+func (d *Docker) CreateContainerZookeeper(name string, port int) (string, error) {
+	var (
+		command string
+		result  string
+		err     error
+	)
+	d.Connect()
+
+	// 先临时创建目录
+	command = fmt.Sprintf("docker run -d --restart=always --name %s --publish %d:2181 --volume /etc/localtime:/etc/localtime wurstmeister/zookeeper",
+		name, port,
+	)
+	fmt.Println("正在执行命令：", command)
+	result, err = d.SSH.Sudo(command)
+	if err != nil {
+		return "", err
+	}
+	fmt.Println("命令执行结果：", result)
+
+	return result, err
+}
+
+// 创建Zookeeper容器，默认使用zookeeper最新版本
+// 容器名称默认使用zookeeper
+// 端口号默认使用2181
+func (d *Docker) CreateContainerZookeeperDefault() (string, error) {
+	result, err := d.CreateContainerZookeeper("zookeeper", 2181)
+	return result, err
+}
+
+// 创建Zookeeper容器，默认使用zookeeper最新版本
+// @param name：容器名称
+// @param port：容器端口号
+// @param brokerId：在kafka集群中，使用brokerId来区分自己
+// @param zookeeperIp：管理kafka的zookeeper的IP地址
+// @param zookeeperPort：管理kafka的zookeeper的端口号
+// @param kafkaIp：把kafka的地址端口注册给zookeeper，如果是远程访问要改成外网IP，非远程使用服务器的内网IP
+func (d *Docker) CreateContainerKafka1(name string, port, brokerId int, zookeeperIp string, zookeeperPort int, kafkaIp string) (string, error) {
+	var (
+		command string
+		result  string
+		err     error
+	)
+	d.Connect()
+
+	// 创建容器
+	command = fmt.Sprintf("docker run -d --restart=always --log-driver json-file --log-opt max-size=100m --log-opt max-file=2 --name %s -p %d:9092 -e KAFKA_BROKER_ID=%d -e KAFKA_ZOOKEEPER_CONNECT=%s:%d/kafka -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://%s:%d -e KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092 -v /etc/localtime:/etc/localtime wurstmeister/kafka",
+		name, port, brokerId, zookeeperIp, zookeeperPort, kafkaIp, port,
+	)
+	fmt.Println("正在执行命令：", command)
+	result, err = d.SSH.Sudo(command)
+	if err != nil {
+		return "", err
+	}
+	fmt.Println("命令执行结果：", result)
+
+	return result, err
+}
+
+// 创建Zookeeper容器，默认使用zookeeper最新版本
+// @param name：容器名称
+// @param port：容器端口号
+// @param brokerId：在kafka集群中，使用brokerId来区分自己
+// @param zookeeperIp：管理kafka的zookeeper的IP地址
+// @param zookeeperPort：管理kafka的zookeeper的端口号
+// @param kafkaIp：把kafka的地址端口注册给zookeeper，如果是远程访问要改成外网IP，非远程使用服务器的内网IP
+func (d *Docker) CreateContainerKafka(name, zookeeperName, host string, port int) (string, error) {
+	var (
+		command string
+		result  string
+		err     error
+	)
+	d.Connect()
+
+	// 创建容器
+	command = fmt.Sprintf("docker run -d --restart=always --name %s --publish %d:9092 --link %s --env KAFKA_ZOOKEEPER_CONNECT=%s:2181 --env KAFKA_ADVERTISED_HOST_NAME=%s --env KAFKA_ADVERTISED_PORT=9092 --volume /etc/localtime:/etc/localtime wurstmeister/kafka", name, port, zookeeperName, zookeeperName, host)
+	fmt.Println("正在执行命令：", command)
+	result, err = d.SSH.Sudo(command)
+	if err != nil {
 		return "", err
 	}
 	fmt.Println("命令执行结果：", result)
