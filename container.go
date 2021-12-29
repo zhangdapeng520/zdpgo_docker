@@ -232,3 +232,25 @@ func (d *Docker) CreateContainerRedisDefault() (string, error) {
 	result, err := d.CreateContainerRedis("redis", 6379, "latest")
 	return result, err
 }
+
+// 创建consul容器
+func (d *Docker) CreateContainerConsul(name string, port int, version string) (string, error) {
+	var (
+		command string
+		result  string
+		err     error
+	)
+	d.Connect()
+
+	// 创建容器
+	command = fmt.Sprintf("docker run -d -p %d:8500 --restart=always --name=%s consul:%s agent -server -bootstrap -ui -node=1 -client='0.0.0.0'", port, name, version)
+	d.log.Info("正在执行命令：", command)
+	result, err = d.ssh.Sudo(command)
+
+	if err != nil {
+		return "", err
+	}
+	d.log.Info("命令执行结果：", result)
+
+	return result, err
+}
